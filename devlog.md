@@ -23,10 +23,15 @@ ___
 
 *Website* -
 
-  * Apart from the application iteself (which will probably be at app.toolpoolapp.com or a similar domain), the rest of the website will include the landing page, contact page, about page, and support/documentation.  This will all be static content, and is probably best served as static HTML.  I have been using [**Gatsby.js**](https://www.gatsbyjs.org/) to build Imogen's website, and it's really good (and actually not that complicated to use).  Basically, it takes all of your pages and content (which can be written as Markdown files) and builds it into static files, which can then be served quickly and for free on **Netlify**, **Github Pages** or **Firebase Hosting** or similar.
+  * Apart from the application itself (which will probably be at app.toolpoolapp.com or a similar domain), the rest of the website will include the landing page, contact page, about page, and support/documentation.  This will all be static content, and is probably best served as static HTML.  I have been using [**Gatsby.js**](https://www.gatsbyjs.org/) to build Imogen's website, and it's really good (and actually not that complicated to use).  Basically, it takes all of your pages and content (which can be written as Markdown files) and builds it into static files, which can then be served quickly and for free on **Netlify**, **Github Pages** or **Firebase Hosting** or similar.
 
+*Deployment* -
+
+   * Although I haven't used it before, Edgy is using Google Firebase for most of the server-side deployment solutions so it seems sensible to use Firebase for this.  I'll use *create-react-app* to create the front-end application and build it to static files, then `firebase deploy` to Firebase hosting.  This allows up to 10 GB of transfer a month (20GB on the $25-a-month plan).  If this gets too expensive in the future, we could consider using GitHub Pages or Netlify which server static sites for free.
 
 Right, off to do some React Router tutorials!
+
+
 
 
 
