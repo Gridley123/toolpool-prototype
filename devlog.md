@@ -27,7 +27,7 @@ ___
 
 *Deployment* -
 
-   * Although I haven't used it before, Edgy is using Google Firebase for most of the server-side deployment solutions so it seems sensible to use Firebase for this.  I'll use *create-react-app* to create the front-end application and build it to static files, then `firebase deploy` to Firebase hosting.  This allows up to 10 GB of transfer a month (20GB on the $25-a-month plan).  If this gets too expensive in the future, we could consider using GitHub Pages or Netlify which server static sites for free.
+   * Although I haven't used it before, Edgy is using Google Firebase for most of the server-side deployment solutions so it seems sensible to use Firebase for this.  I'll use *create-react-app* to create the front-end application and build it to static files, then `firebase deploy` to Firebase hosting. A la : [https://www.codementor.io/yurio/all-you-need-is-react-firebase-4v7g9p4kf](https://www.codementor.io/yurio/all-you-need-is-react-firebase-4v7g9p4kf) This allows up to 10 GB of transfer a month (20GB on the $25-a-month plan).  If this gets too expensive in the future, we could consider using GitHub Pages or Netlify which server static sites for free.
 
 Right, off to do some React Router tutorials!
 
