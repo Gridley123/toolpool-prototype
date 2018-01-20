@@ -4,18 +4,19 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
+// eslint-disable-next-line
 import { ApolloClient, HttpLink, InMemoryCache } from 'apollo-client-preset';
 import gql from 'graphql-tag';
 import { ApolloProvider, graphql } from 'react-apollo';
 import { SchemaLink } from 'apollo-link-schema';
-import { importSchema } from 'graphql-import';
-
 import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
 
 import { typeDefs } from './schema';
+import mocks from './mocks'
+
 
 const schema = makeExecutableSchema({ typeDefs });
-addMockFunctionsToSchema({ schema });
+addMockFunctionsToSchema({ schema, mocks });
 
 //Mocking client
 
@@ -58,6 +59,17 @@ const itemsQuery = gql`
       id
       name
         tags
+        description
+        status
+        pricePerDay {
+            amount
+            currency
+        }
+        pricePerHire {
+            amount
+            currency
+        }
+        geolocation
     }
   }
 `;

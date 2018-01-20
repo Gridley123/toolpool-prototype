@@ -1,5 +1,7 @@
 export const typeDefs =  `
 
+
+
 enum STATUS {
     PUBLISHED,
     DRAFT,
@@ -37,12 +39,18 @@ input BookingRequestInput {
     end: Date!
 }
 
+type Price {
+  amount: Float!
+  currency: String!
+}
+
 type Booking {
     id: ID!,
     item: ID!,
     user: ID!
     start: Date!,
     end: Date!
+    totalPrice: Price!
 }
 
 type Availability {
@@ -59,7 +67,8 @@ type Item {
     name: String,
     description: String,
     tags: [String],
-    pricePerDay: Float,
+    pricePerHire: Price,
+    pricePerDay: Price,
     geolocation: String,
     bookings: [Booking]
 }

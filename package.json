@@ -13,6 +13,8 @@
     "react-dom": "^16.2.0"
   },
   "devDependencies": {
+    "casual": "^1.5.19",
+    "faker": "^4.1.0",
     "react-scripts": "1.1.0"
   },
   "scripts": {
