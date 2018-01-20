@@ -94,6 +94,14 @@ Right, off to do some React Router tutorials!
    5.   Play around with the schema in schema.js and the query in App.js.
    6.   Once our server is running, replace the Apollo Link parameter in the client initialiser with the apollo-link-http one and point it at our server.
 
+### 20 Jan 18
+
+1.  Added a `mock.js` file which has mock resolvers for the schema.  This makes the data returned look more realistic.
+
+2.  Played about with the schema a bit.  Added a Price type, with a currency and an amount.  This may help if we ever internationalize!
+
+3.  Added a pricePerDay and pricePerHire field to the Item type.  Added a totalPrice field to the Booking type.
+
 
 
 
