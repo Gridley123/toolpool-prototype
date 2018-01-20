@@ -9,13 +9,17 @@ import { ApolloClient, HttpLink, InMemoryCache } from 'apollo-client-preset';
 import gql from 'graphql-tag';
 import { ApolloProvider, graphql } from 'react-apollo';
 import { SchemaLink } from 'apollo-link-schema';
+import { GraphQLDate } from 'graphql-iso-date';
 import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
 
 import { typeDefs } from './schema';
 import mocks from './mocks'
 
+const resolvers = {
+  Date: GraphQLDate
+};
 
-const schema = makeExecutableSchema({ typeDefs });
+const schema = makeExecutableSchema({ typeDefs, resolvers });
 addMockFunctionsToSchema({ schema, mocks });
 
 //Mocking client
@@ -53,7 +57,7 @@ class App extends Component {
 
 const PropsDisplayer = data => <div><pre style={{textAlign: 'left'}} dangerouslySetInnerHTML={{__html: JSON.stringify(data, undefined, 2) }} /></div>;
 
-const itemsQuery = gql`
+const itemsListQuery = gql`
   query ItemsListQuery {
     list {
       id
@@ -74,6 +78,12 @@ const itemsQuery = gql`
   }
 `;
 
-const PropsDisplayerWithData = graphql(itemsQuery)(PropsDisplayer);
+const ItemCreateMutation = gql`
+  mutation itemCreateMutation {
+      createItem()
+  }
+`
+
+const PropsDisplayerWithData = graphql(itemsListQuery)(PropsDisplayer);
 
 export default App;

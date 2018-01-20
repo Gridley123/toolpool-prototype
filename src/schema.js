@@ -19,7 +19,6 @@ input UpdateStatusInput {
 }
 
 input ItemInput {
-    id: ID!
     status: STATUS,
     name: String,
     description: String,
@@ -76,14 +75,15 @@ type Item {
 type Query {
     list: [Item],
     get (id: ID!): Item,
-    getAvailability (items: [ID!], start: Date!, end: Date! ): String
+    getAvailability (items: [ID!], start: Date!, end: Date! ): String,
+    testAvailabilityList: [Availability]
 }
 
 type Mutation {
-    create (item: ItemInput!): Item,
-    update (id: ID!, item: ItemInput): Item,
-    requestBooking (booking: BookingRequestInput): Booking
-    setStatus (ids: [ID!], status: STATUS): Item,
+    createItem (item: ItemInput!): Item,
+    updateItem (id: ID!, item: ItemInput): Item,
+    requestItemBooking (booking: BookingRequestInput): Booking
+    setItemStatus (ids: [ID!], status: STATUS): Item,
     updateLocation(ids: [ID!], geolocation: String): Item
 }
 `;

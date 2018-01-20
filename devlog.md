@@ -102,6 +102,10 @@ Right, off to do some React Router tutorials!
 
 3.  Added a pricePerDay and pricePerHire field to the Item type.  Added a totalPrice field to the Booking type.
 
+4.  Changed `create`, `update` etc in schema mutations to `createItem` etc to distinguish them from any possible future User mutations or the like.
+
+5.  Removed `id:ID!` from `input ItemInput`.  The server / database should automatically provide the id.
+
 
 
 
