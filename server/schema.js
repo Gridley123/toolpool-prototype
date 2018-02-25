@@ -1,21 +1,117 @@
-import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
+export const typeDefs =  `enum SORT_BY {
+    ASC
+    DESC
+}
 
-const typeDefs = `
-type Broadcaster {
-  id: ID!
-  name: String
-  terrestrial: Boolean!
+enum ITEM_STATUS {
+    PUBLISHED,
+    DRAFT,
+    DISABLED
 }
-type Channel {
-  id: ID!
-  name: String
-  broadcasters: [Broadcaster!]!
+
+enum BOOKING_STATUS {
+    PENDING
+    APPROVED
+    CANCELLED
 }
+
+input UpdateLocationInput {
+    ids: [ID!]
+    postcode: String!
+}
+
+input UpdateStatusInput {
+    ids: [ID!]
+    status: ITEM_STATUS
+}
+
+input ItemInput {
+    status: ITEM_STATUS!,
+    name: String!,
+    description: String,
+    tags: [String],
+    currency: String!,
+    pricePerDay: Float!,
+    pricePerHire: Float!,
+    deposit: Float!,
+    lat: Float,
+    lng: Float
+}
+
+input ItemQuery {
+    postcode: String,
+    queryText: String
+}
+
+input BookingRequestInput {
+    item: ID!,
+    start: Date!,
+    end: Date!
+}
+
+type Tag {
+    id: ID!
+    name: String!
+    numberOfUses: Int!
+}
+
+scalar Date
+
+type Geolocation {
+    lat: Float
+    lng: Float
+}
+
+type Price {
+    amount: Float!
+    currency: String!
+}
+
+type Booking {
+    id: ID!,
+    status: BOOKING_STATUS,
+    item: Item,
+    start: Date!,
+    end: Date!
+    totalPrice: Price!
+
+}
+
+type Availability {
+    start: Date!,
+    end: Date!,
+    bookings: [Booking]
+}
+
+type Item {
+    id: ID!
+    status: ITEM_STATUS,
+    name: String,
+    description: String,
+    tags: [Tag],
+    pricePerHire: Price,
+    pricePerDay: Price,
+    deposit: Price,
+    geolocation: Geolocation,
+    bookings: [Booking]
+}
+
 type Query {
-  channels: [Channel]
+    listItems: [Item],
+    listTags(sort: SORT_BY): [Tag],
+    listBookings: [Booking]
+    getItem (id: ID!): Item,
+    getItemAvailability (items: [ID!], start: Date!, end: Date! ): String,
+}
+
+type Mutation {
+    createItem (item: ItemInput!): Item,
+    updateItem (id: ID!, item: ItemInput): Item,
+    requestItemBooking (booking: BookingRequestInput): Booking
+    setItemStatus (ids: [ID!], status: ITEM_STATUS): Item,
+    updateLocation(input: UpdateLocationInput!): Item,
+    createTag( name: String!): Tag
+    deleteItem (id: ID!) : Item
+    editItem (id: ID!, item: ItemInput!): Item
 }
 `;
-
-const schema = makeExecutableSchema({ typeDefs });
-addMockFunctionsToSchema({ schema });
-export { schema };

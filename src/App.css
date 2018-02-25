@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+
 }
 
 .App-logo {
@@ -8,10 +8,11 @@
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
+  background-color: black;
+  height: 200px;
   padding: 20px;
-  color: white;
+  color:  #e75220;
+  text-align: center;
 }
 
 .App-title {
@@ -21,6 +22,16 @@
 .App-intro {
   font-size: large;
 }
+
+.App-body {
+  margin-bottom: 30px;
+  background-image: url('toolPoolBg.jpg');
+  background-size: contain;
+  padding-bottom: 50px;
+  min-height: 1000px;
+}
+
+
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }

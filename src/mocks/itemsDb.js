@@ -17,6 +17,10 @@ const itemsDb = {
           "amount": 5,
           "currency": "GBP"
         },
+        "deposit": {
+          "amount": 40,
+          "currency": "GBP"
+        },
         //I have used the "location" part of a google geocoding location return here
         "geolocation": {
           "lat": 37.4224764,
@@ -42,6 +46,10 @@ const itemsDb = {
           "amount": 3,
           "currency": "GBP"
         },
+        "deposit": {
+          "amount": 43,
+          "currency": "GBP"
+        },
         //I have used the "location" part of a google geocoding location return here
         "geolocation": {
           "lat": 45.4224764,
@@ -65,6 +73,10 @@ const itemsDb = {
         },
         "pricePerDay": {
           "amount": 19,
+          "currency": "GBP"
+        },
+        "deposit": {
+          "amount": 45,
           "currency": "GBP"
         },
         //I have used the "location" part of a google geocoding location return here

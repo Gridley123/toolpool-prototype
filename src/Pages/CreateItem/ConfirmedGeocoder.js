@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
-import {Button, Divider, Form, Image, Input, Message, Segment, Header} from 'semantic-ui-react';
+import {Button, Form, Input} from 'semantic-ui-react';
 
 //MOCKED
-import staticMapURL from '../stubs/staticmap.png';
-
 
 // const gMapsClient = require('@google/maps').createClient({
 //   key: process.env.REACT_APP_GEOCODE_KEY,

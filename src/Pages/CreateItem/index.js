@@ -1,9 +1,16 @@
 import React, {Component} from 'react';
-import {Card, Container, Form, Icon, Input, Label, List, Message, Button} from 'semantic-ui-react';
+import {Button, Card, Container, Form, Icon, Input, Label, List, Message} from 'semantic-ui-react';
 import shortid from 'shortid';
 import {isDecimal, isLength} from 'validator';
 import Geocoder from './Geocoder';
 import ConfirmedGeocoder from './ConfirmedGeocoder';
+import gql from 'graphql-tag';
+import {graphql} from 'react-apollo';
+import {fragments} from '../Item/index';
+import { LIST_ITEMS_QUERY } from '../ListItems';
+import { LIST_TAGS_QUERY } from '../ListTags';
+
+
 
 const Filter = require('bad-words'), filter = new Filter();
 filter.removeWords('hell');
@@ -16,15 +23,17 @@ class CreateItemForm extends Component {
     this.state = {
       fieldStates: {
         name: '',
+        status: '',
         description: '',
         tagText: '',
         tags: [],
+        currency: '',
         pricePerDay: 0,
         pricePerHire: 0,
         deposit: 0,
         geolocation: {},
       },
-      formSubmittedOnce: false,
+      formSubmitAttempted: false,
       tagErrorMessages: [],
       formErrorMessages: [],
       formErrorFields: [],
@@ -47,9 +56,8 @@ class CreateItemForm extends Component {
       fieldStates
     }, () => {
 
-      if (this.state.formSubmittedOnce) {
+      if (this.state.formSubmitAttempted) {
         this.validateForm();
-
       }
     });
 
@@ -78,7 +86,7 @@ class CreateItemForm extends Component {
   }
 
   validateTag(tag) {
-    this.setState({tagErrorMessages:[]});
+    this.setState({ tagErrorMessages: [] });
     const pushTagErr = (message) => this.setState((prevState) => {
       if (!prevState.tagErrorMessages.includes(message)) {
         return { tagErrorMessages: [...prevState.tagErrorMessages, message] }
@@ -127,7 +135,7 @@ class CreateItemForm extends Component {
 
   validateForm() {
     this.setState({ formErrorMessages: [], formErrorFields: [] });
-    const { status, name, pricePerDay, pricePerHire, deposit } = this.state.fieldStates;
+    const { status, description, currency, name, pricePerDay, pricePerHire, deposit } = this.state.fieldStates;
     const nameOK = isLength(name, { min: 3, max: 50 });
     if (!nameOK) {
       this.addError(`name`, `The name '${name}' is shorter than 3 characters or longer than 50 characters`)
@@ -135,18 +143,26 @@ class CreateItemForm extends Component {
     if (filter.isProfane(name)) {
       this.addError(`name`, `This name contains inappropriate or offensive terms`)
     }
+    if (filter.isProfane(description)) {
+      this.addError(`description`, `This description contains inappropriate or offensive terms`)
+    }
 
-    const PPHOK = isDecimal(pricePerHire + '', { decimal_digits: '0,2', locale: 'en-GB' });
+    const currOK = currency && (currency === 'GBP' || currency === 'USD' || currency ==='EUR');
+    if (!currOK) {
+      this.addError('currency', `Please enter a valid currency`);
+    }
+
+    const PPHOK = (pricePerHire!=null) && isDecimal(pricePerHire + '', { decimal_digits: '0,2', locale: 'en-GB' });
     if (!PPHOK) {
       this.addError('pricePerHire', `Price Per Hour should be a valid monetary amount`)
     }
 
-    const PPDOK = isDecimal(pricePerDay + '', { decimal_digits: '0,2', locale: 'en-GB' });
+    const PPDOK = (pricePerDay!=null) && isDecimal(pricePerDay + '', { decimal_digits: '0,2', locale: 'en-GB' });
     if (!PPDOK) {
       this.addError('pricePerDay', `Price Per Day should be a valid monetary amount`)
     }
 
-    const depositOK = isDecimal(deposit + '', { decimal_digits: '0,2', locale: 'en-GB' });
+    const depositOK = (deposit!=null) && isDecimal(deposit + '', { decimal_digits: '0,2', locale: 'en-GB' });
     if (!depositOK) {
       this.addError('deposit', `Deposit should be a valid monetary amount`)
     }
@@ -155,6 +171,8 @@ class CreateItemForm extends Component {
     if (!statusOK) {
       this.addError('status', `You must select an initial status for this item.  This can be changed later by editing the item`)
     }
+
+
   }
 
   onTagErrDismiss() {
@@ -170,7 +188,7 @@ class CreateItemForm extends Component {
 
   setLocation(newGeolocation, inputtedLocation) {
     this.setState((prevState) => {
-      const newState = {...prevState};
+      const newState = { ...prevState };
       newState.fieldStates.geolocation = newGeolocation;
       newState.fieldStates.inputtedLocation = inputtedLocation;
       return newState;
@@ -179,18 +197,50 @@ class CreateItemForm extends Component {
 
   resetLocation() {
     this.setState((prevState) => {
-      const newState = {...prevState};
+      const newState = { ...prevState };
       newState.fieldStates.geolocation = {};
       newState.fieldStates.inputtedLocation = '';
       return newState;
     })
   }
 
+  createSubmissionItem() {
+    const { name, status, description, tags, pricePerDay, pricePerHire, deposit, currency, geolocation } = this.state.fieldStates;
+    return {
+      name,
+      description: description.length>0 ? description : null,
+      status,
+      currency,
+      tags: tags.length>0 ? tags.map(tag => tag.text) : null,
+      pricePerDay,
+      pricePerHire,
+      deposit,
+      lat: geolocation.lat!=null ? geolocation.lat : null,
+      lng: geolocation.lng!=null ? geolocation.lng : null,
+    }
+  }
+
   handleSubmit() {
     this.validateForm();
     this.setState({
-      formSubmittedOnce: true,
-    })
+      formSubmitAttempted: true,
+    });
+    setTimeout(() => {
+      if (!this.state.formErrorFields.length > 0){
+        this.props.mutate({
+          refetchQueries: [{query: LIST_TAGS_QUERY}],
+          variables: {
+            item: this.createSubmissionItem(),
+          }
+        }).then(({ data }) => {
+          console.log('got data', data);
+
+        }).catch((error) => {
+          console.log('there was an error sending the query', error);
+        });
+      }
+    }, 20);
+
   }
 
   render() {
@@ -255,12 +305,13 @@ class CreateItemForm extends Component {
                 <Form.TextArea name={"description"} value={this.state.fieldStates.description}
                                onChange={this.handleChange} label='Item Description'/>
                 <div>
-                    <Form.Field error={this.state.tagErrorMessages.length > 0} inline>
-                      <label>Tags </label>
-                      <Input name="tagText" value={this.state.fieldStates.tagText}
-                             onChange={this.handleChange}
-                             type='text' action={<Button content={'Add Tag'} onClick={this.handleTagTextSubmit}/>}/>
-                    </Form.Field>
+                  <Form.Field error={this.state.tagErrorMessages.length > 0} inline>
+                    <label>Tags </label>
+                    <Input name="tagText" value={this.state.fieldStates.tagText}
+                           onChange={this.handleChange}
+                           type='text' action={<Button content={'Add Tag'}
+                                                       onClick={this.handleTagTextSubmit}/>}/>
+                  </Form.Field>
                   <Message attached={"bottom"} onDismiss={this.onTagErrDismiss} negative
                            hidden={this.state.tagErrorMessages.length === 0}
                            header={'There was an error regarding this tag'}
@@ -274,6 +325,7 @@ class CreateItemForm extends Component {
                 }
 
                 <Form.Select placeholder="Select the currency for your transactions..."
+                             error={this.state.formErrorFields.includes('currency')}
                              name="currency"
                              onChange={this.handleChange}
                              value={this.state.fieldStates.currency}
@@ -293,7 +345,10 @@ class CreateItemForm extends Component {
                             value={this.state.fieldStates.deposit}
                             onChange={this.handleChange}
                             label='Deposit for Item' type='number'/>
-                {this.state.fieldStates.geolocation.lat!==undefined ? <ConfirmedGeocoder resetLocation = {this.resetLocation} location={this.state.fieldStates.inputtedLocation}/> : <Geocoder setLocation = {this.setLocation} /> }
+                {this.state.fieldStates.geolocation.lat !== undefined ?
+                  <ConfirmedGeocoder resetLocation={this.resetLocation}
+                                     location={this.state.fieldStates.inputtedLocation}/> :
+                  <Geocoder setLocation={this.setLocation}/>}
                 <Form.Button positive content={'Submit Item'} onClick={this.handleSubmit}/>
               </Form>
             </div>
@@ -372,7 +427,30 @@ class CreateItemForm extends Component {
   }
 }
 
-CreateItemForm.propTypes = {};
-CreateItemForm.defaultProps = {};
+const CREATE_ITEM_MUTATION = gql`
+    mutation createItem($item: ItemInput!) {
+        createItem(item: $item) {
+            ...ItemPageItem
+            tags{
+                name
+                id
+                numberOfUses
+            }
+        }
+    }
+    ${fragments.item}
+    ${fragments.price}
+    ${fragments.geolocation}
+`;
 
-export default CreateItemForm;
+const CreateFormWithData = graphql(CREATE_ITEM_MUTATION, {
+  options: {
+    update: (proxy, { data: { createItem } }) => {
+      const itemData = proxy.readQuery({query: LIST_ITEMS_QUERY});
+      itemData.listItems.push(createItem);
+      proxy.writeQuery({ query: LIST_ITEMS_QUERY, data: itemData});
+    },
+  }
+})(CreateItemForm);
+
+export default CreateFormWithData;

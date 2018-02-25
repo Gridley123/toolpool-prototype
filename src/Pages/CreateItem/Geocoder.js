@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
-import {Button, Divider, Form, Image, Input, Message, Segment, Header} from 'semantic-ui-react';
-import {isDecimal, isLength} from 'validator';
+import {Button, Form, Header, Image, Input, Message, Segment} from 'semantic-ui-react';
+import {isLength} from 'validator';
 //MOCKED
-import staticMapURL from '../stubs/staticmap.png';
-import gMapsClient from '../stubs/gMapsClient';
+import staticMapURL from '../../stubs/staticmap.png';
+import gMapsClient from '../../stubs/gMapsClient';
 
 
 // const gMapsClient = require('@google/maps').createClient({
@@ -15,7 +15,14 @@ import gMapsClient from '../stubs/gMapsClient';
 class Geocoder extends Component {
   constructor(props, context) {
     super(props, context);
-    this.defaultState = { submittedOnce: false, inputText:'', loading: false, loadingError: false, location: {}, validationError: false,  };
+    this.defaultState = {
+      submittedOnce: false,
+      inputText: '',
+      loading: false,
+      loadingError: false,
+      location: {},
+      validationError: false,
+    };
     this.state = this.defaultState;
     this.handleChange = this.handleChange.bind(this);
     this.checkLocation = this.checkLocation.bind(this);
@@ -31,7 +38,7 @@ class Geocoder extends Component {
   }
 
   confirm(bool) {
-    if(bool){
+    if (bool) {
       this.props.setLocation(this.state.location, this.state.inputtedLocation);
     }
     else {
@@ -40,11 +47,11 @@ class Geocoder extends Component {
   }
 
   validate() {
-    if(!isLength(this.state.inputText, {min: 2})){
-      this.setState({validationError: true});
+    if (!isLength(this.state.inputText, { min: 2 })) {
+      this.setState({ validationError: true });
       return false;
     } else {
-      this.setState({validationError: false});
+      this.setState({ validationError: false });
       return true;
     }
   }
@@ -58,7 +65,7 @@ class Geocoder extends Component {
   }
 
   checkLocation() {
-    if(this.validate()) {
+    if (this.validate()) {
       gMapsClient.geocode({
         address: this.state.inputText,
         components: { country: 'GB' }
@@ -95,7 +102,7 @@ class Geocoder extends Component {
         </Segment>
         <Segment textAlign={"center"}>
           <Header as={"h3"}>
-          Does the map show the correct approximate location?
+            Does the map show the correct approximate location?
           </Header>
           <Button.Group>
             <Button positive onClick={() => this.confirm(true)}>Yes</Button>
@@ -106,23 +113,24 @@ class Geocoder extends Component {
       </Segment.Group>;
 
     const valErr = this.state.validationError ? `The inputted location is missing or does not look correct` : null;
-    const locationErr = this.state.loadingError ? `The location finder can not find your location.  You may not be connected to the internet or the location may not exist.  Please try a different location or again later`: null;
+    const locationErr = this.state.loadingError ? `The location finder can not find your location.  You may not be connected to the internet or the location may not exist.  Please try a different location or again later` : null;
     const errMessage = [valErr, locationErr];
     return (
       <div>
         <Form.Field inline error={this.state.loadingError}>
           <label>Location </label>
           <Input value={this.state.inputText}
-            name="geolocation"
+                 name="geolocation"
                  onChange={this.handleChange}
                  type='text' placeholder='Postcode/Town/City'
                  action={<Button loading={this.state.loading} content={'Check Location'}
                                  onClick={this.checkLocation}/>}/>
           {/**/}
         </Form.Field>
-        <Message attached={"bottom"} negative hidden={!this.state.loadingError && !this.state.validationError}
+        <Message attached={"bottom"} negative
+                 hidden={!this.state.loadingError && !this.state.validationError}
                  header='Location Finder Error'
-                 list={errMessage} />
+                 list={errMessage}/>
         {this.state.location.lat !== undefined && imageGroup}
       </div>
 

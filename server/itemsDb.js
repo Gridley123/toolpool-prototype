@@ -1,4 +1,4 @@
-const itemsDb = {
+const itemsDb = () => ({
   "items": {
     "byId": {
       "1": {
@@ -17,6 +17,11 @@ const itemsDb = {
           "amount": 5,
           "currency": "GBP"
         },
+        "deposit":
+          {
+            "amount": 20,
+            "currency": "GBP"
+          },
         //I have used the "location" part of a google geocoding location return here
         "geolocation": {
           "lat": 37.4224764,
@@ -47,6 +52,11 @@ const itemsDb = {
           "lat": 45.4224764,
           "lng": -110.0842499
         },
+        "deposit":
+          {
+            "amount": 30,
+            "currency": "GBP"
+          },
         "bookings": [
           1
         ]
@@ -72,6 +82,11 @@ const itemsDb = {
           "lat": 10.4224764,
           "lng": -111.0842499
         },
+        "deposit":
+          {
+            "amount": 40,
+            "currency": "GBP"
+          },
         "bookings": [
           2
         ]
@@ -128,6 +143,6 @@ const itemsDb = {
     },
     "allIds": [1, 2, 3],
   }
-};
+});
 
-export default itemsDb;
+export default itemsDb();
