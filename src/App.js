@@ -130,11 +130,13 @@ const itemData = {
   ]
 };
 
-let uri = 'http://localhost:8080/graphql';
+// let uri = 'http://localhost:8080/graphql';
+//
+// if(process.env.NODE_ENV === 'production') {
+//   uri = `https://toolpool-193609.appspot.com/graphql`;
+// }
 
-if(process.env.NODE_ENV === 'production') {
-  uri = `https://toolpool-193609.appspot.com/graphql`;
-}
+let uri = `https://toolpool-193609.appspot.com/graphql`;
 
 const client = new ApolloClient({
   link: new HttpLink({ uri, }),
