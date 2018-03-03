@@ -10,20 +10,29 @@ import {typeDefs} from './schema';
 const schema = makeExecutableSchema({ typeDefs });
 addResolveFunctionsToSchema(schema, resolverMap);
 
-const PORT = 4000;
 
-const server = express();
+  const PORT = 8080;
 
-server.use(cors());
 
-server.use('/graphql', bodyParser.json(), graphqlExpress({
+const app = express();
+
+app.use(cors());
+
+app.use('/graphql', bodyParser.json(), graphqlExpress({
   schema
 }));
 
 
-server.use('/graphiql', graphiqlExpress({
+app.use('/graphiql', graphiqlExpress({
   endpointURL: '/graphql'
 }));
 
 
-server.listen(PORT, () => console.log(`GraphQL Server is now running on http://localhost:${PORT}`));
+
+const server = app.listen(PORT, () => {
+
+  let host = server.address().address;
+  if(host === '::') host = 'localhost';
+  const serverport = server.address().port;
+  console.log(`GraphQL Server is now running on http://${host}:${serverport}`)}
+);

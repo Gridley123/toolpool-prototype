@@ -130,150 +130,17 @@ const itemData = {
   ]
 };
 
-// const schema = makeExecutableSchema({ typeDefs });
-// addResolveFunctionsToSchema(schema, resolverMap);
-// addMockFunctionsToSchema({ schema, mocks });
+let uri = 'http://localhost:8080/graphql';
 
-//Mocking client
+if(process.env.NODE_ENV === 'production') {
+  uri = `https://toolpool-193609.appspot.com/graphql`;
+}
 
-// const client = new ApolloClient({
-//   link: new SchemaLink({ schema }),
-//   cache: new InMemoryCache(),
-// });
-
-// When you have a server setup, replace the above client with the following to test your server.
-//
 const client = new ApolloClient({
-  link: new HttpLink({ uri: 'http://localhost:4000/graphql' }),
+  link: new HttpLink({ uri, }),
   cache: new InMemoryCache()
 });
 
-//
-
-
-// class DataDisplayer extends Component {
-//   constructor(props, context) {
-//     super(props, context);
-//     this.state = {
-//       displayResult: false,
-//     };
-//     this.toggleDisplayResult = this.toggleDisplayResult.bind(this);
-//     this.mutate = this.props.hasOwnProperty('mutate');
-//   }
-//
-//   toggleDisplayResult() {
-//     if (this.mutate) {
-//       this.sendMutation()
-//     }
-//     this.setState((prevState) => {
-//       return { displayResult: !prevState.displayResult }
-//     });
-//   }
-//
-//   sendMutation() {
-//     this.props.mutate({
-//       refetchQueries: [{
-//         query: itemsListQuery
-//       }]
-//     });
-//   }
-//
-//   render() {
-//     const buttonText = () => {
-//       if (!this.state.displayResult) {
-//         return this.mutate ? 'Call Mutate' : 'Display Query Result'
-//       } else {
-//         return this.mutate ? 'Call Mutate' : 'Close'
-//       }
-//     };
-//
-//     const pre = this.state.displayResult ? <pre style={{ textAlign: 'left' }}
-//                                                 dangerouslySetInnerHTML={{ __html: JSON.stringify(this.props.data, undefined, 2) }}/> : null;
-//     return (
-//       <div>
-//         <h3>{this.props.componentName}</h3>
-//         <button onClick={this.toggleDisplayResult}>{buttonText()}</button>
-//         <div>
-//           {pre}
-//         </div>
-//       </div>
-//     )
-//   }
-// }
-
-// const ITEMS_LIST_QUERY = gql`
-//     query ItemsListQuery {
-//         listItems {
-//             id
-//             name
-//             tags {
-//                 id
-//                 name
-//                 numberOfUses
-//             }
-//             description
-//             status
-//             pricePerDay {
-//                 amount
-//                 currency
-//             }
-//             pricePerHire {
-//                 amount
-//                 currency
-//             }
-//             geolocation {
-//                 lat
-//                 long
-//             }
-//             bookings {
-//                 start
-//                 end
-//                 item
-//                 totalPrice {
-//                     amount
-//                     currency
-//                 }
-//             }
-//         }
-//     }
-// `;
-//
-// const ItemListDisplayerWithData = graphql(itemsListQuery)(DataDisplayer);
-//
-// const createItem = gql`
-//     mutation createItem {
-//         createItem(item: { status: PUBLISHED, name: "Hi" }) {
-//             id
-//             name
-//             status
-//             description
-//         }
-//     }
-// `;
-//
-// const ItemCreateDisplayerWithMutation = graphql(createItem)(DataDisplayer);
-//
-// const bookingsListQuery = gql`
-//     query BookingsListQuery {
-//         listBookings {
-//             id
-//             status
-//             start
-//             end
-//             item
-//             totalPrice{
-//                 amount
-//                 currency
-//             }
-//         }
-//     }
-// `;
-//
-// const BookingListDisplayerWithData = graphql(bookingsListQuery)(DataDisplayer);
-//
-// // const getItemQuery = gql`
-// //   query getItemQuery
-// // `
 
 
 class App extends Component {

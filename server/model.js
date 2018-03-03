@@ -5,7 +5,6 @@ import _ from 'lodash';
 const model = {
   create: (type, entity) => {
     return new Promise((resolve, reject) => {
-      let id;
       if (!entity.hasOwnProperty("id") || entity.id === undefined ||  entity.id === null) {
         id = faker.random.uuid();
         entity.id = id;

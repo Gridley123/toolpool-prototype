@@ -43,6 +43,13 @@ input ItemQuery {
     queryText: String
 }
 
+input TagUpdateInput {
+    id: ID!
+    name: String
+    numberOfUses: Int
+    items: [ID]
+}
+
 input BookingRequestInput {
     item: ID!,
     start: Date!,
@@ -53,6 +60,7 @@ type Tag {
     id: ID!
     name: String!
     numberOfUses: Int!
+    items: [Item]
 }
 
 scalar Date
@@ -93,7 +101,8 @@ type Item {
     pricePerDay: Price,
     deposit: Price,
     geolocation: Geolocation,
-    bookings: [Booking]
+    bookings: [Booking],
+    items: [Item]
 }
 
 type Query {
@@ -113,5 +122,6 @@ type Mutation {
     createTag( name: String!): Tag
     deleteItem (id: ID!) : Item
     editItem (id: ID!, item: ItemInput!): Item
+    updateTag (id: ID!, tag: TagUpdateInput!): Tag
 }
 `;

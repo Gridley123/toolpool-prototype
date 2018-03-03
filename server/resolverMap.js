@@ -138,6 +138,15 @@ export default {
         });
       };
       return edit();
+    },
+    async updateTag(_, {id, tag}) {
+      const oldTag = await model.get("tags", id);
+      const merged = lodash.merge(oldTag, tag);
+      merged.id = id;
+      return model.delete("tags", id).then(() => {
+        return model.create("tags", merged);
+      })
+
     }
 
   }
