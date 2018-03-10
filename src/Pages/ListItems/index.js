@@ -38,7 +38,7 @@ class ListItems extends Component {
         <Loader size="huge" inline={"centered"}/>
       )
     } else {
-      const itemsList = listItems.map((item) => {
+      const itemsList = listItems ? listItems.map((item) => {
         return (
           <List.Item key={item.id}>
             <Card>
@@ -55,7 +55,7 @@ class ListItems extends Component {
             </Card>
           </List.Item>
         )
-      });
+      }) : null;
 
       return (
         <div>

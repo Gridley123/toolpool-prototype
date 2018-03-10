@@ -1,89 +1,44 @@
-import model from './model';
-import itemsDb from './itemsDb';
+import {Items} from './model';
 
-test('find', () => {
-  model.find("tags", "name", "building").then((res) => {
-    expect(res).toMatchObject({id: 2, name: "building"});
-  })
-})
-
-test('model.find is a function', () => {
-  expect(model.find).toBeInstanceOf(Function);
-})
-
-test('model.update correctly updates an item', () => {
-  expect(itemsDb.items.byId[1]).toEqual({
-    "id": 1,
-      "status": "PUBLISHED",
-      "name": "Sledgehammer",
-      "description": "For smashing stuff up",
-      "tags": [
-      1, 2
-    ],
-      "pricePerHire": {
-      "amount": 10,
-        "currency": "GBP"
-    },
-    "pricePerDay": {
-      "amount": 5,
-        "currency": "GBP"
-    },
-    "deposit":
-    {
-      "amount": 20,
-      "currency": "GBP"
-    },
-    //I have used the "location" part of a google geocoding location return here
-    "geolocation": {
-      "lat": 37.4224764,
-        "lng": -122.0842499
-    },
-    "bookings": [
-      3
-    ]
-  });
-
-  const updatedObj = {
-    name: "ClawHammer",
-    pricePerHire: {
-      amount: 13
-    },
-    geolocation: {
-      lat: 1,
-      lng: 2
-    },
-    tags: [1,3],
+const context = {
+  connector: {
+    set: jest.fn()
+    get: jest.fn()
   }
-  model.update("items", 1, updatedObj);
+}
 
-  expect(itemsDb.items.byId[1]).toEqual({
-    "id": 1,
-    "status": "PUBLISHED",
-    "name": "ClawHammer",
-    "description": "For smashing stuff up",
-    "tags": [
-      1, 3
-    ],
-    "pricePerHire": {
-      "amount": 13,
-      "currency": "GBP"
-    },
-    "pricePerDay": {
-      "amount": 5,
-      "currency": "GBP"
-    },
-    "deposit":
-      {
-        "amount": 20,
-        "currency": "GBP"
-      },
-    //I have used the "location" part of a google geocoding location return here
-    "geolocation": {
-      "lat": 1,
-      "lng": 2
-    },
-    "bookings": [
-      3
-    ]
-  });
+const itemModel = new Items(context);
+
+beforeEach(() => {
+  jest.resetAllMocks();
+});
+
+describe("Items", function () {
+  describe("createTag", function () {
+    it("calls the connector's set method once with the required arguments", function () {
+
+      const testItem = {
+        name: 'TestName',
+        description: 'Lorem Ipsum'
+      }
+      itemModel.createItem(testItem);
+      console.log(context.connector.set.mock);
+      expect(context.connector.set.mock.calls).toEqual([['items', testItem]]);
+    });
+
+    it("calls the Tag.createTag method if the tag name does not already exist", function () {
+      const testItem = {
+        name: 'Testname',
+        tags: ['existingName']
+      };
+      context.connector.get.mockReturnValue(null);
+      itemModel.createItem(testItem);
+
+
+    });
+
+    it("Returns an item with a generated id", function () {
+
+    })
+  })
 })

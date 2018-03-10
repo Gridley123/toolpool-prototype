@@ -11,10 +11,11 @@ import { LIST_ITEMS_QUERY } from '../ListItems';
 import { LIST_TAGS_QUERY } from '../ListTags';
 
 
-
 const Filter = require('bad-words'), filter = new Filter();
 filter.removeWords('hell');
 filter.removeWords('hello');
+
+
 
 
 class CreateItemForm extends Component {
@@ -243,6 +244,8 @@ class CreateItemForm extends Component {
 
   }
 
+
+
   render() {
     const currencyOptions = [
       { text: 'GBP', value: 'GBP' },
@@ -356,74 +359,6 @@ class CreateItemForm extends Component {
         </Card>
       </Container>
     );
-
-
-    // const tagList = () => this.state.fieldStates.tags.map((tag, index) => <li key={index}>{tag}<button style={{marginLeft:"5px"}} id={`tag:${index}`} onClick={this.deleteTag}>X</button>
-    // </li>);
-    // return (
-    //
-    //   <div>
-    //     <label htmlFor="status">Item Title</label>
-    //     <br/>
-    //     <select onChange={this.handleChange} value={this.state.status} name="status">
-    //       <option value="DRAFT">"Draft"</option>
-    //       <option value="PUBLISHED">"Published"</option>
-    //       <option value="DISABLED">"Disabled"</option>
-    //     </select>
-    //     <br/><br/>
-    //
-    //     <label htmlFor="name">Item Title</label>
-    //     <br/>
-    //     <input onChange={this.handleChange} type="text" name="name"/>
-    //     <br/><br/>
-    //
-    //     <label htmlFor="description">Item Description</label>
-    //     <br/>
-    //     <textarea onChange={this.handleChange} name="description"/>
-    //     <br/><br/>
-    //
-    //     <form onSubmit={this.handleTagTextSubmit}>
-    //       <label htmlFor="tagText">Tags</label>
-    //       <br/>
-    //       <input type="text" onChange={this.handleChange} value={this.state.tagText}  name="tagText"/>
-    //       <input type="submit" value="Add Tag"/>
-    //       <br/><br/>
-    //     </form>
-    //
-    //     <ul style={{ listStyle: "none" }}>
-    //       {tagList()}
-    //     </ul>
-    //
-    //     <label htmlFor="currency">Currency</label>
-    //     <br/>
-    //     <select value={this.state.currency} onChange={this.handleChange} name="currency">
-    //       <option value="GBP">"GBP"</option>
-    //       <option value="USD">"USD"</option>
-    //       <option value="EUR">"EUR"</option>
-    //     </select>
-    //     <br/><br/>
-    //
-    //     <label htmlFor="pricePerHireAmount">Price Per Hire</label>
-    //     <br/>
-    //     <input onChange={this.handleChange} type="number" name="pricePerHireAmount"/>
-    //     <br/><br/>
-    //
-    //     <label htmlFor="pricePerDayAmount">Price Per Day</label>
-    //     <br/>
-    //     <input onChange={this.handleChange} type="number" name="pricePerDayAmount"/>
-    //     <br/><br/>
-    //
-    //     <label htmlFor="deposit">Deposit for Item</label>
-    //     <br/>
-    //     <input onChange={this.handleChange} type="number" name="deposit"/>
-    //     <br/><br/>
-    //
-    //     <label htmlFor="location">Item Location (Postcode, Town or City)</label>
-    //     <br/>
-    //     <input onChange={this.handleChange} type="text" name="location"/>
-    //   </div>
-
-    // );
   }
 }
 

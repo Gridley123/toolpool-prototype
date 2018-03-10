@@ -1,23 +1,52 @@
 //TODO Create better mock resolvers to enable a more intuitive mock graphql return.
 
 import React, {Component} from 'react';
-import logo from './crossSpanner.svg';
-import './App.css';
+import logo from './images/crossSpanner.svg';
+import background from './images/toolPoolBg.jpg';
+import styled from 'styled-components';
+import { keyframes } from 'styled-components';
 import CreateItemForm from './Pages/CreateItem';
 import ListItems from './Pages/ListItems';
 import ListTags from './Pages/ListTags'
 import Item from './Pages/Item';
 import EditItem from './Pages/EditItem';
-// eslint-disable-next-line
 import {ApolloClient, InMemoryCache} from 'apollo-client-preset';
 import {HttpLink} from "apollo-link-http";
-// import gql from 'graphql-tag';
 import {ApolloProvider} from 'react-apollo';
-// import {addResolveFunctionsToSchema, makeExecutableSchema} from 'graphql-tools';
 import {Link, Route} from 'react-router-dom';
 import {Menu} from 'semantic-ui-react';
-// import resolverMap from './mocks/resolverMap';
-// import {typeDefs} from './schema';
+
+const AppHeader = styled.header`
+  background-color: black;
+  height: 200px;
+  padding: 20px;
+  color:  #e75220;
+  text-align: center;
+`;
+
+const AppLogo = styled.img`
+  animation: ${spin} infinite 20s linear;
+  height: 80px;
+`;
+
+const spin = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+`;
+
+const AppTitle = styled.h1`
+  font-size: 1.5em;
+`;
+
+const AppBody = styled.div`
+  margin-bottom: 30px;
+  background-image: url(${background});
+  background-size: contain;
+  padding-bottom: 50px;
+  min-height: 1000px;
+`
+
+
 
 const itemData = {
   "listItems": [
@@ -130,13 +159,13 @@ const itemData = {
   ]
 };
 
-// let uri = 'http://localhost:8080/graphql';
-//
-// if(process.env.NODE_ENV === 'production') {
-//   uri = `https://toolpool-193609.appspot.com/graphql`;
-// }
+let uri = 'http://localhost:8080/graphql';
 
-let uri = `https://toolpool-193609.appspot.com/graphql`;
+if(process.env.NODE_ENV === 'production') {
+  uri = `https://toolpool-193609.appspot.com/graphql`;
+}
+
+// let uri = `https://toolpool-193609.appspot.com/graphql`;
 
 const client = new ApolloClient({
   link: new HttpLink({ uri, }),
@@ -150,12 +179,12 @@ class App extends Component {
   render() {
     return (
       <ApolloProvider client={client}>
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo"/>
-            <h1 className="App-title">ToolPool</h1>
-          </header>
-          <div className={"App-body"}>
+        <div>
+          <AppHeader>
+            <AppLogo src={logo} alt="logo"/>
+            <AppTitle>ToolPool</AppTitle>
+          </AppHeader>
+          <AppBody>
             <Menu inverted fluid style={{marginBottom:"25px", borderRadius: 0}}>
               <Menu.Item>
                 <Link to={"/create-item"}>Create Item</Link>
@@ -173,9 +202,8 @@ class App extends Component {
               <Route path={"/tags"} render={props => <ListTags{...props} />}/>
               <Route exact path={"/items/:id"} render={props => <Item {...props} />}/>
               <Route path={"/items/:id/edit"} render={props => <EditItem {...props} />}/>
-
             </div>
-          </div>
+          </AppBody>
         </div>
       </ApolloProvider>
     );

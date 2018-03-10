@@ -2,6 +2,43 @@ import itemsDb from './itemsDb';
 import faker from 'faker';
 import _ from 'lodash';
 
+export class Items {
+  constructor({ connector }) {
+    this.connector = connector;
+  }
+  getItemById(id){
+    return this.connector.get('items', id);
+  }
+  listAllItems(){
+    return this.connector.list("items");
+  }
+  createItem(item){
+    return this.connector.set('items', item);
+  }
+
+  updateItem(id, item){
+
+  }
+}
+
+export class Tags {
+  constructor({ connector }) {
+    return this.connector = connector;
+  }
+  getTagById(id) {
+    return this.connector.find("tags", id);
+  }
+  getTagByName(name) {
+    return this.connector.find("tags", name)
+  }
+  listAllTags() {
+    return this.connector.list("tags");
+  }
+  createTag(name){
+    return this.connector.create("tags", { name });
+  }
+}
+
 const model = {
   create: (type, entity) => {
     return new Promise((resolve, reject) => {
