@@ -6,9 +6,11 @@ import background from './images/toolPoolBg.jpg';
 import styled from 'styled-components';
 import { keyframes } from 'styled-components';
 import CreateItemForm from './Pages/CreateItem';
+import SignIn from './Pages/SignIn';
 import ListItems from './Pages/ListItems';
-import ListTags from './Pages/ListTags'
+import ListTags from './Pages/ListTags';
 import Item from './Pages/Item';
+import RegisterUser from './Pages/RegisterUser';
 import EditItem from './Pages/EditItem';
 import {ApolloClient, InMemoryCache} from 'apollo-client-preset';
 import {HttpLink} from "apollo-link-http";
@@ -44,7 +46,7 @@ const AppBody = styled.div`
   background-size: contain;
   padding-bottom: 50px;
   min-height: 1000px;
-`
+`;
 
 
 
@@ -195,6 +197,9 @@ class App extends Component {
               <Menu.Item>
                 <Link to={"/tags"}>List Tags</Link>
               </Menu.Item>
+              <Menu.Item>
+                <Link to={"/signin"}>Sign In</Link>
+              </Menu.Item>
             </Menu>
             <div>
               <Route path={"/create-item"} component={CreateItemForm}/>
@@ -202,6 +207,8 @@ class App extends Component {
               <Route path={"/tags"} render={props => <ListTags{...props} />}/>
               <Route exact path={"/items/:id"} render={props => <Item {...props} />}/>
               <Route path={"/items/:id/edit"} render={props => <EditItem {...props} />}/>
+              <Route path={"/signin"} component={SignIn}/>
+              <Route path={"/signedIn"} component={RegisterUser}/>
             </div>
           </AppBody>
         </div>
