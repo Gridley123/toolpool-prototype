@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
-import {Button, Card, Container, Icon, List, Loader} from 'semantic-ui-react';
+import {Card, Container, Icon, List, Loader} from 'semantic-ui-react';
 import gql from 'graphql-tag';
 import {compose, graphql} from 'react-apollo';
 import _ from 'lodash';
+import listItemsQuery from '../../queries/listItemsQuery';
 
 
 class ListItems extends Component {
@@ -21,11 +22,11 @@ class ListItems extends Component {
         id,
       },
       update: (proxy, { data: { deleteItem } }) => {
-        const data = proxy.readQuery({ query: LIST_ITEMS_QUERY });
+        const data = proxy.readQuery({ query: listItemsQuery });
         _.remove(data.listItems, item =>
           item.id === deleteItem.id
         );
-        proxy.writeQuery({ query: LIST_ITEMS_QUERY, data });
+        proxy.writeQuery({ query: listItemsQuery, data });
       }
     })
   }
@@ -79,14 +80,6 @@ ListItems.fragments = {
   `
 };
 
-export const LIST_ITEMS_QUERY = gql`
-    query ListItems {
-        listItems {
-            ...ListItemPageItem
-        }
-    }
-    ${ListItems.fragments.listItems}
-`;
 
 export const DELETE_ITEM_MUTATION = gql`
     mutation DeleteItem($id: ID!){
@@ -97,7 +90,7 @@ export const DELETE_ITEM_MUTATION = gql`
     }
 `;
 
-const ListItemsQueryEnhancer = graphql(LIST_ITEMS_QUERY, {
+const ListItemsQueryEnhancer = graphql(listItemsQuery, {
   options: {
     pollInterval: 20000
   }

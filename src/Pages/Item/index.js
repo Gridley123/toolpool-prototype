@@ -2,8 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {Card, Container, List, Loader} from 'semantic-ui-react';
 import getSymbolFromCurrency from 'currency-symbol-map'
-import gql from 'graphql-tag';
 import {graphql} from 'react-apollo';
+import itemQuery from '../../queries/itemQuery';
 
 
 const Item = ({ data }) => {
@@ -74,58 +74,9 @@ const Item = ({ data }) => {
 };
 
 
-Item.fragments = {
-  item: gql`
-      fragment ItemPageItem on Item {
-          id
-          name
-          description
-          tags {
-              id
-              name
-          }
-          pricePerHire {
-              ...price
-          }
-          pricePerDay {
-              ...price
-          }
-          deposit {
-              ...price
-          }
-          geolocation {
-              ...geolocation
-          }
-          status
-      }
-  `,
-  price: gql`
-      fragment price on Price {
-          amount
-          currency
-      }
-  `,
-  geolocation: gql`
-      fragment geolocation on Geolocation {
-          lat
-          lng
-      }
-  `
-};
 
-export const ITEM_QUERY = gql`
-    query GetItem($id: ID!) {
-        getItem(id:$id){
-            ...ItemPageItem
-        }
-    }
-    ${Item.fragments.item}
-    ${Item.fragments.price}
-    ${Item.fragments.geolocation}
 
-`;
-
-const ItemWithData = graphql(ITEM_QUERY, {
+const ItemWithData = graphql(itemQuery, {
   options: (({ match }) => ({ variables: { id: match.params.id } }))
 })(Item);
 

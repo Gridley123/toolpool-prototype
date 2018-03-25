@@ -15,6 +15,7 @@
     "graphql-iso-date": "^3.3.0",
     "graphql-tag": "^2.6.1",
     "graphql-tools": "^2.18.0",
+    "npm": "^5.8.0",
     "react": "^16.2.0",
     "react-apollo": "^2.0.4",
     "react-dom": "^16.2.0",

@@ -3,6 +3,7 @@ import {Card, Container, Form, List, Loader} from 'semantic-ui-react';
 import gql from 'graphql-tag';
 import {graphql} from 'react-apollo';
 import lodash from 'lodash';
+import listTagsQuery from '../../queries/listTagsQuery';
 
 
 class ListTags extends Component {
@@ -83,27 +84,10 @@ class ListTags extends Component {
   }
 }
 
-ListTags.fragments = {
-  listTags: gql`
-      fragment ListTagPageTag on Tag {
-          id
-          name
-          numberOfUses
-      }
-  `
-};
-
-export const LIST_TAGS_QUERY = gql`
-    query ListTags {
-        listTags {
-            ...ListTagPageTag
-        }
-    }
-    ${ListTags.fragments.listTags}
-`;
 
 
-const ListTagsWithData = graphql(LIST_TAGS_QUERY, {
+
+const ListTagsWithData = graphql(listTagsQuery, {
   options: {
     pollInterval: 20000,
   }

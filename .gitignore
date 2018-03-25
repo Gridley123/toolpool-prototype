@@ -68,3 +68,16 @@ typings/
 
 # next.js build output
 .next
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen### Example user template template
+### Example user template
+
+graphql.config.json
+graphql.schema.json
+

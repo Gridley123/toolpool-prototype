@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components';
-import UnstyledApp from './App';
+import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import 'semantic-ui-css/semantic.min.css';
 import {BrowserRouter} from 'react-router-dom';
 
-const App = styled(UnstyledApp)`
+const StyledApp = styled(App)`
   margin: 0;
   padding: 0;
   font-family: sans-serif;
@@ -14,7 +14,7 @@ const App = styled(UnstyledApp)`
 
 ReactDOM.render(
   <BrowserRouter>
-    <App/>
+    <StyledApp/>
   </BrowserRouter>
   , document.getElementById('root'));
 registerServiceWorker();

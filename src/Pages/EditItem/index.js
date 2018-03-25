@@ -4,11 +4,10 @@ import shortid from 'shortid';
 import {isDecimal, isLength} from 'validator';
 import Geocoder from '../CreateItem/Geocoder';
 import ConfirmedGeocoder from '../CreateItem/ConfirmedGeocoder';
-import gql from 'graphql-tag';
 import {graphql, compose} from 'react-apollo';
-import {fragments} from '../Item/index';
-import { LIST_ITEMS_QUERY } from '../ListItems';
-import { ITEM_QUERY } from '../Item';
+import listItemsQuery from '../../queries/listItemsQuery';
+import itemQuery from '../../queries/itemQuery';
+import editItemMutation from '../../mutations/editItemMutation';
 import lodash from 'lodash';
 
 const Filter = require('bad-words'), filter = new Filter();
@@ -407,24 +406,13 @@ class EditItemForm extends Component {
   }
 }
 
-const EDIT_ITEM_MUTATION = gql`
-    mutation editItem($id:ID! $item: ItemInput!) {
-        editItem(id: $id, item: $item) {
-            ...ItemPageItem
-        }
-    }
-    ${fragments.item}
-    ${fragments.price}
-    ${fragments.geolocation}
-`;
 
-
-const EditItemFormMutationEnhancer = graphql(EDIT_ITEM_MUTATION, {
+const EditItemFormMutationEnhancer = graphql(editItemMutation, {
   options: ({match}) => ({
     refetchQueries: [{
-      query: LIST_ITEMS_QUERY,
+      query: listItemsQuery,
     }, {
-      query: ITEM_QUERY,
+      query: itemQuery,
       variables: {
         id: match.params.id
       }
@@ -432,7 +420,7 @@ const EditItemFormMutationEnhancer = graphql(EDIT_ITEM_MUTATION, {
   })
 });
 
-const EditItemFormQueryEnhancer = graphql(ITEM_QUERY, {
+const EditItemFormQueryEnhancer = graphql(itemQuery, {
   options: (({ match }) => ({ variables: { id: match.params.id } }))
 });
 

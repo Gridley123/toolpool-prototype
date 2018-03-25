@@ -4,18 +4,15 @@ import shortid from 'shortid';
 import {isDecimal, isLength} from 'validator';
 import Geocoder from './Geocoder';
 import ConfirmedGeocoder from './ConfirmedGeocoder';
-import gql from 'graphql-tag';
 import {graphql} from 'react-apollo';
-import {fragments} from '../Item/index';
-import { LIST_ITEMS_QUERY } from '../ListItems';
-import { LIST_TAGS_QUERY } from '../ListTags';
+import listItemsQuery from '../../queries/listItemsQuery';
+import listTagsQuery from '../../queries/listTagsQuery';
+import createItemMutation from '../../mutations/createItemMutation';
 
 
 const Filter = require('bad-words'), filter = new Filter();
 filter.removeWords('hell');
 filter.removeWords('hello');
-
-
 
 
 class CreateItemForm extends Component {
@@ -229,7 +226,7 @@ class CreateItemForm extends Component {
     setTimeout(() => {
       if (!this.state.formErrorFields.length > 0){
         this.props.mutate({
-          refetchQueries: [{query: LIST_TAGS_QUERY}],
+          refetchQueries: [{query: listTagsQuery}],
           variables: {
             item: this.createSubmissionItem(),
           }
@@ -362,28 +359,13 @@ class CreateItemForm extends Component {
   }
 }
 
-const CREATE_ITEM_MUTATION = gql`
-    mutation createItem($item: ItemInput!) {
-        createItem(item: $item) {
-            ...ItemPageItem
-            tags{
-                name
-                id
-                numberOfUses
-            }
-        }
-    }
-    ${fragments.item}
-    ${fragments.price}
-    ${fragments.geolocation}
-`;
 
-const CreateFormWithData = graphql(CREATE_ITEM_MUTATION, {
+const CreateFormWithData = graphql(createItemMutation, {
   options: {
     update: (proxy, { data: { createItem } }) => {
-      const itemData = proxy.readQuery({query: LIST_ITEMS_QUERY});
+      const itemData = proxy.readQuery({query: listItemsQuery});
       itemData.listItems.push(createItem);
-      proxy.writeQuery({ query: LIST_ITEMS_QUERY, data: itemData});
+      proxy.writeQuery({ query: listItemsQuery, data: itemData});
     },
   }
 })(CreateItemForm);
